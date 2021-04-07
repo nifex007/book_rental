@@ -1,2 +1,6 @@
 .env
 venv
+
+# Exclude machine-specific vs code settings
+.vscode/
+.vscode/settings.json
