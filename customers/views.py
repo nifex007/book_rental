@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
-from customers.serializers import CustomerSerializer, CreateCustomerSerializer
+from customers.serializers import CustomerSerializer
 from customers.models import Customer
 from books_rental.utils import get_jwt, decode_jwt
 import jwt, datetime
@@ -11,9 +12,11 @@ import jwt, datetime
 
 
 # Create your views here.
-class Register(APIView):
+class Register(CreateAPIView):
+
+    serializer_class = CustomerSerializer
     def post(self, request):
-        serializer = CreateCustomerSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
