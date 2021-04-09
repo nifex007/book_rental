@@ -71,7 +71,8 @@ class RentCreateView(CreateAPIView):
                 book.stock = stock - 1
                 book.save()
                 serializer.save()
-                return Response({'code': status.HTTP_201_CREATED, 'data': serializer.data, 'message': 'Success'})
+                return Response({'code': status.HTTP_201_CREATED, 'data': serializer.data, 'message': 'Success'}, 
+                                    status=status.HTTP_201_CREATED)
             return Response({'code': status.HTTP_200_OK, 'message': 'Book is not available'})
         return Response({'code': status.HTTP_400_BAD_REQUEST, 'error': error.detail}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -97,7 +98,9 @@ class ReturnBookView(GenericAPIView):
         # add book back to stock
         book.stock = stock + 1
         book.save()
-        return Response({'code': status.HTTP_200_OK, 'message': '{} Returned'.format(rent.book.title)})
+
+        r = RentSerializer(rent)
+        return Response({'code': status.HTTP_200_OK,  'data': r.data, 'message': '{} Returned'.format(rent.book.title)})
 
 
 class RentsListView(APIView):

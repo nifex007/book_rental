@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
@@ -20,7 +21,7 @@ class Register(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data)
+        return Response({'data': serializer.data, 'message': 'Customer Registered'}, status=status.HTTP_201_CREATED)
 
 
 class Login(APIView):
@@ -52,7 +53,7 @@ class CustomerView(APIView):
         user = Customer.objects.filter(id=payload['id']).first()
         serializer = CustomerSerializer(user)
 
-        return Response(serializer.data)
+        return Response({'data': serializer.data}, status=status.HTTP_200_OK)
 
 
 
@@ -63,6 +64,8 @@ class LogOut(APIView):
         response.data = {
             "message": "User logged out"
         }
+
+        return response
 
 
 
