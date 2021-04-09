@@ -14,7 +14,7 @@ class Book(models.Model):
         return False
 
     def __str__(self):
-        return self.title
+        return '{} - {}'.format(self.title, self.authors)
 
 
 class Rent(models.Model):
