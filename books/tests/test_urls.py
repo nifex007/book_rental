@@ -7,7 +7,7 @@ from books.views import BookListCreate, BookRetrieveUpdateDestroyView, BookRentC
 class TestUrls(SimpleTestCase):
 
     def test_book_list_url_resolves(self):
-        url = reverse('book_list')
+        url = reverse('book_list_add')
         self.assertEquals(resolve(url).func.view_class, BookListCreate)
 
     def test_book_rud_url_resolves(self):
