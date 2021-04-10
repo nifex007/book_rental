@@ -1,0 +1,37 @@
+{% extends 'ui/base.html' %}
+{% block content %}
+
+<div class="container">
+    <h2>Customers to be charged</h2>
+    
+    <div class="row">
+        <div class="col s6">
+            <a href="{% url 'index' %}" class="">
+                <p class="grey-text text-darken-3">Available books</p>
+            </a>  
+        </div>
+        <div class="col s6">
+            <a href="{% url 'customer_list_view' %}" class="">
+                <p class="grey-text text-darken-3">Active Customers</p>
+            </a>  
+        </div>
+    </div>
+    <hr>
+    {% if not customers_uncharged %}
+    <div>
+        <h4>No uncharged customer</h4>
+    </div>
+    {%else %}
+    <div class="collection grey">
+        <label class="black-text">click on any customer below to see get reciept</label>
+        {% for customer_uncharged in customers_uncharged %}
+        <a href="?customer={{customer_uncharged.customer.id}}&customer_name={{customer_uncharged.customer.full_name}}" class="collection-item black-text">
+            {{customer_uncharged}}
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

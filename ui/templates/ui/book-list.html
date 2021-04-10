@@ -1,0 +1,55 @@
+{% extends 'ui/base.html' %}
+{% block content %}
+
+<div class="container">
+
+  {% if books_list %}
+  <h2>Books</h2>
+  <hr>
+  <div class="row">
+    <div class="col s6">
+        <a href="{% url 'customer_list_view' %}" class="">
+            <p class="grey-text text-darken-3">Active Customers</p>
+        </a>  
+    </div>
+    <div class="col s6">
+        <a href="{% url 'customer_charge_view' %}" class="">
+            <p class="grey-text text-darken-3">Charge Customers</p>
+        </a>  
+    </div>
+  </div>
+  
+
+  {% endif %}
+
+  <div class="row">
+    
+    {% for book in books_list %}
+    <div class="">
+      <div class="card-panel">
+            <h5><strong>{{ book.title }}</strong> <i>by</i> <span>{{book.authors}}</span> </h5>
+            <a href="{% url 'add_rent_view' %}?book={{book.id}}" class="btn-small grey">
+                <span class="bold">Rent</span>
+              </a>
+      </div>
+    </div>
+    {% empty %}
+    <div class="nobook-wrapper center">
+      <h3 class="grey-text">Sorry, you don't have any books, yet.</h3>
+      <a href="" class="btn-large grey">
+        <span class="bold">Add Book</span>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if books_list %}
+  <a href="{% url 'add_book_view' %}" class="btn-large grey">
+    <span class="bold">Add Book</span>
+  </a>
+  {% endif %}
+
+
+</div>
+
+{% endblock %}

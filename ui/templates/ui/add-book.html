@@ -1,0 +1,35 @@
+{% extends 'ui/base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <form class="col s12" method="POST" >
+            {% csrf_token %}
+            <div class="row">
+                <div class="input-field col s12">
+                  <input id="title" type="text" class="validate" name="title" required>
+                  <label for="title">Book Title</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="authors" type="text" class="validate" name="authors" required>
+                  <label for="authors">Author</label>
+                </div>
+              </div>
+          <div class="row">
+            <div class="input-field col 12">
+              <input id="stock" type="number" class="validate" min="0" required>
+              <label for="stock">Copies</label>
+            </div>
+          </div>
+          
+          <input type="submit" value="Submit" class="btn-small grey">
+        
+        </form>
+      </div>
+</div>
+
+        
+
+{% endblock %}

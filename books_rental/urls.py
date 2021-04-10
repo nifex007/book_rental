@@ -15,9 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from ui.views import index_view, add_book_view, add_rent_view, customer_list_view, customer_charge_view
+
 
 urlpatterns = [
+    # ui routes
+    path('', index_view, name='index'),
+    path('add_book', add_book_view, name='add_book_view'),
+    path('add_rent', add_rent_view, name='add_rent_view'),
+    path('customer_list', customer_list_view, name='customer_list_view'),
+    path('customer_charge', customer_charge_view, name='customer_charge_view'),
+    
     path('admin/', admin.site.urls),
+
+    # backend routes
     path('api/users/', include('customers.urls')),
     path('api/books/', include('books.urls')),
 

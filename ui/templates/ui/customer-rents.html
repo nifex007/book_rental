@@ -1,0 +1,34 @@
+{% extends 'ui/base.html' %}
+{% block content %}
+
+<div class="container">
+    <h2>Active Rents</h2>
+    <div class="row">
+        <div class="col s6">
+            <a href="{% url 'index' %}" class="">
+                <p class="grey-text text-darken-3">Available books</p>
+            </a>  
+        </div>
+        <div class="col s6">
+            <a href="{% url 'customer_charge_view' %}" class="">
+                <p class="grey-text text-darken-3">Charge Customers</p>
+            </a>  
+        </div>
+    </div>
+    <hr>
+    {% if not customer_rents %}
+    <div>
+        <h4>No active rent for this customer</h4>
+    </div>
+    {% else %}
+    <div class="collection grey">
+        <label class="black-text">click to return book</label>
+        {% for customer_rent in customer_rents %}
+        <a href="?book={{customer_rent.book.id}}&customer={{customer_rent.customer.id}}" class="collection-item black-text">{{customer_rent}}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

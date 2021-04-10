@@ -1,0 +1,33 @@
+{% extends 'ui/base.html' %}
+{% block content %}
+
+
+<body class = "container">   
+    <div class = "row">
+       <form class = "col s12" method="POST">
+        {% csrf_token %}
+          <div class = "row">
+                <label>Customer</label>
+                    <select class="browser-default" id="customer" name="customer" required> 
+                        <option value="" disabled selected>Select Customer</option>
+                        {% for customer in customers_list %}
+                        <option value="{{ customer.id}}">{{ customer.full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            <div class = "row">
+                <label>Book</label>
+                  <select class="browser-default" id="book" name="book" required>
+                      <option value="{{ book.id }}" selected>{{book}}</option>
+                  </select>
+            </div>
+                <br>
+            <input type="submit" value="Submit" class="btn-small grey">
+
+        </form>       
+    </div>
+</body>
+
+        
+
+{% endblock %}
