@@ -1,0 +1,18 @@
+Name                               Stmts   Miss  Cover
+------------------------------------------------------
+books/serializers.py                  17      0   100%
+books/urls.py                          3      0   100%
+books/views.py                        96     10    90%
+books_rental/pricing_policies.py      14      0   100%
+books_rental/settings.py              24     24     0%
+books_rental/urls.py                   4      0   100%
+books_rental/utils.py                 25      7    72%
+customers/serializers.py              12      0   100%
+customers/urls.py                      3      0   100%
+customers/views.py                    49      9    82%
+ui/utils.py                           14      9    36%
+ui/views.py                          100     85    15%
+------------------------------------------------------
+TOTAL                                361    144    60%
+----------------------------------------------------------------------
+Ran 26 tests in 1.060s

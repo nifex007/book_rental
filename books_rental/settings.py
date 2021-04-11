@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'books',
     'ui',
 
+    'django_nose',
+
 ]
 
 MIDDLEWARE = [
@@ -141,3 +143,13 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'customers.Customer'
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the 'foo' and 'bar' apps
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=foo,bar', '--cover-package=books,customers,ui,books_rental'
+]

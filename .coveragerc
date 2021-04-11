@@ -1,0 +1,16 @@
+[run]
+omit = 
+    */migrations/*
+    *admin.py
+    *models.py
+    *apps.py
+    *__init__.py
+
+
+[report]
+omit = 
+    */migrations/*
+    *admin.py
+    *models.py
+    *apps.py
+    *__init__.py
