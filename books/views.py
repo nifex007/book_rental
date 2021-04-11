@@ -63,7 +63,7 @@ class RentCreateView(CreateAPIView):
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)  
         except ValidationError as error:
-            return Response({'code': status.HTTP_400_BAD_REQUEST, 'error': error.detail})
+            return Response({'code': status.HTTP_400_BAD_REQUEST, 'error': error.detail}, status=status.HTTP_400_BAD_REQUEST)
         else:
             book = Book.objects.get(id=request.data['book'])
             if book.is_available():
@@ -123,12 +123,17 @@ class BookRentChargeView(APIView):
             return Response({'code': status.HTTP_400_BAD_REQUEST, 'error': error.detail})
         if customer_rents is None or len(list(customer_rents)) == 0:
             return Response({'code': status.HTTP_400_BAD_REQUEST, 'message': 'Nothing to charge for the customer'})
+        
         total_charge = customer_rents.aggregate(Sum('charge'))
         total_charge = float(total_charge['charge__sum'])
-
+        customer_rents_serialized = RentSerializer(customer_rents, many=True)
+        
+        rents_data = customer_rents_serialized.data
         customer_rents.update(paid=True)
+        
         data = {}
         data['rent_charge'] = total_charge
+        data['rents'] = rents_data
 
         return Response({'code': status.HTTP_200_OK, 'data': data, 'message': 'Success'})
 
