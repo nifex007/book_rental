@@ -4,9 +4,21 @@ from customers.models import Customer
 
 # Create your models here.
 class Book(models.Model):
+
+    REGULAR = 'R'
+    FICTION = 'F'
+    NOVELS = 'N'
+
+    BOOK_TYPES = [
+        (REGULAR, 'regular'),
+        (FICTION, 'fiction'),
+        (NOVELS, 'novels')
+    ]
+
     title = models.CharField(max_length=255)
     stock = models.IntegerField()
     authors = models.CharField(max_length=255)
+    book_type = models.CharField(max_length=1, choices=BOOK_TYPES, default=REGULAR)
 
     def is_available(self):
         if self.stock > 0:

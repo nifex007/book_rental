@@ -5,7 +5,7 @@ import datetime
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['id', 'title', 'authors', 'stock', 'is_available']
+        fields = ['id', 'title', 'authors', 'stock', 'is_available', 'book_type']
 
     def create(self, validated_data):
         return Book.objects.create(**validated_data)
