@@ -4,6 +4,7 @@ from django.urls import reverse
 from books.models import Book, Rent
 from customers.models import Customer
 from books_rental.utils import get_days
+from books_rental.pricing_policies import compute_charge
 import json
 import datetime
 
@@ -18,13 +19,28 @@ class TestBookViews(TestCase):
         self.book1 = Book.objects.create(
             title='Black Boy',
             stock=5,
-            authors='Richard Wright'
+            authors='Richard Wright',
+            book_type='F'
         )
 
         self.book2 = Book.objects.create(
             title='As the Crow Flies',
             stock=0,
             authors='Jeffrey Archer'
+        )
+
+        self.book3 = Book.objects.create(
+            title='Black Boy',
+            stock=5,
+            authors='Richard Wright',
+            book_type='N'
+        )
+
+        self.book4 = Book.objects.create(
+            title='The 48 Laws of Power',
+            stock=3,
+            authors='Robert Green',
+            book_type='R'
         )
 
         self.customer1 = Customer.objects.create(
@@ -49,39 +65,17 @@ class TestBookViews(TestCase):
         )
 
         self.rent2 = Rent.objects.create(
-                customer=self.customer2,
-                book=self.book1,
-                start_date=self.today,
-                return_date=self.today + datetime.timedelta(5)
+                customer=self.customer1,
+                book=self.book3,
+                start_date=self.today
         )
 
-        # Rent models 3 - 5 structured to meet criteria for BookRentChargeView
         self.rent3 = Rent.objects.create(
-            customer=self.customer2,
-                book=self.book1,
-                start_date=self.today,
-                return_date=self.today + datetime.timedelta(5),
-                charge=5.0,
-                paid=False      
+            customer=self.customer1,
+            book=self.book4,
+            start_date=self.today   
         )
 
-        self.rent4 = Rent.objects.create(
-            customer=self.customer2,
-                book=self.book2,
-                start_date=self.today,
-                return_date=self.today + datetime.timedelta(4),
-                charge=4.0,
-                paid=False      
-        )
-
-        self.rent5 = Rent.objects.create(
-            customer=self.customer2,
-                book=self.book2,
-                start_date=self.today,
-                return_date=self.today + datetime.timedelta(10),
-                charge=10.0,
-                paid=False      
-        )
 
 
         self.book_payload = {
@@ -148,8 +142,7 @@ class TestBookViews(TestCase):
         book1_after_rent = Book.objects.get(id=response.data['data']['book'])
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
         self.assertEquals(book1_before_rent.stock, book1_after_rent.stock + 1)
-
-    
+  
     def test_book_return_view(self):
         create_rent_response = self.client.post(reverse('rent_create'),
                                     data=json.dumps(self.rent_payload),
@@ -160,23 +153,31 @@ class TestBookViews(TestCase):
         url = 'book_return'
         response = self.client.get(reverse(url, args=[self.book1.id, self.customer1.id]))
 
-        return_date = response.data['data']['return_date']
-        return_date = datetime.datetime.strptime(return_date, "%Y-%m-%d").date()
-
-        expected_charge = get_days(return_date) * RENT_PER_DAY
+        start_date = response.data['data']['return_date']
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+        
+        # expected_charge = get_days(start_date) * RENT_PER_DAY
+        expected_charge = compute_charge(self.book1.book_type, get_days(start_date))
         rent_charged = float(response.data['data']['charge'])
 
         self.assertEquals(response.status_code, status.HTTP_200_OK)
         self.assertEquals(expected_charge, rent_charged)
 
-
-    
     def test_rent_charge_view(self):
+        # Customer 1 to rent book1(F|$3.00), book3(N|$1.50), book4(R|$1.50) for One day each 
+        # expect charges $6.00
+
+        book_return_url = 'book_return'
+        self.client.get(reverse(book_return_url, args=[self.book1.id, self.customer1.id]))
+        self.client.get(reverse(book_return_url, args=[self.book3.id, self.customer1.id]))
+        self.client.get(reverse(book_return_url, args=[self.book4.id, self.customer1.id]))
+ 
+
         url = 'rents_charge'
-        response = self.client.get(reverse(url, args=[self.customer2.id]))
+        response = self.client.get(reverse(url, args=[self.customer1.id]))
         
         self.assertEquals(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(response.data['data']['rent_charge'], 19.0)
+        self.assertEquals(response.data['data']['rent_charge'], 6.0)
         
 
 
