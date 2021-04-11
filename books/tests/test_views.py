@@ -165,7 +165,7 @@ class TestBookViews(TestCase):
 
     def test_rent_charge_view(self):
         # Customer 1 to rent book1(F|$3.00), book3(N|$2.0), book4(R|$2.0) for One day each 
-        # expect charges $6.00
+        # expect charges $7.00
 
         book_return_url = 'book_return'
         self.client.get(reverse(book_return_url, args=[self.book1.id, self.customer1.id]))
