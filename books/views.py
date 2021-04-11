@@ -9,6 +9,7 @@ from rest_framework import status
 from books.serializers import BookSerializer, RentSerializer
 from books.models import Book, Rent
 from books_rental.utils import get_days
+from books_rental.pricing_policies import compute_charge
 import datetime
 
 CHARGE_PER_DAY = 1.00
@@ -89,7 +90,9 @@ class ReturnBookView(GenericAPIView):
             return Response({'code': status.HTTP_400_BAD_REQUEST, 'message': 'This book is not with the customer'})
          # charge for rent
         rent_days = get_days(rent.start_date)
-        rent.charge = CHARGE_PER_DAY * rent_days
+        # rent.charge = CHARGE_PER_DAY * rent_days
+        book_type = rent.book.book_type
+        rent.charge = compute_charge(book_type, rent_days)
         rent.return_date = datetime.date.today()
         rent.save()
 
