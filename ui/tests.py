@@ -6,7 +6,7 @@ from ui.views import index_view, add_book_view, add_rent_view, customer_list_vie
 
 # Create your tests here.
 
-class TestUrl(SimpleTestCase):
+class TestUIUrls(SimpleTestCase):
 
     def test_index_url_resolves(self):
         url = reverse('index')

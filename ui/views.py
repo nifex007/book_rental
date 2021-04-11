@@ -49,6 +49,7 @@ def add_book_view(request):
         title = request.POST.get('title', '')
         authors = request.POST.get('authors', '')
         stock = request.POST.get('stock', 1)
+        book_type = request.POST.get('book_type', 'R')
 
         host = get_current_host(request)
         route = 'api/books/'
@@ -56,7 +57,8 @@ def add_book_view(request):
         payload = {
             'title': title,
             'authors': authors,
-            'stock': stock
+            'stock': stock,
+            'book_type': book_type
         }
         response = post_payload(url, payload)
         if response.status_code == 201:
