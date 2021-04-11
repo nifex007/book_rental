@@ -164,7 +164,7 @@ class TestBookViews(TestCase):
         self.assertEquals(expected_charge, rent_charged)
 
     def test_rent_charge_view(self):
-        # Customer 1 to rent book1(F|$3.00), book3(N|$1.50), book4(R|$1.50) for One day each 
+        # Customer 1 to rent book1(F|$3.00), book3(N|$2.0), book4(R|$2.0) for One day each 
         # expect charges $6.00
 
         book_return_url = 'book_return'
@@ -177,7 +177,7 @@ class TestBookViews(TestCase):
         response = self.client.get(reverse(url, args=[self.customer1.id]))
         
         self.assertEquals(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(response.data['data']['rent_charge'], 6.0)
+        self.assertEquals(response.data['data']['rent_charge'], 7.0)
         
 
 
