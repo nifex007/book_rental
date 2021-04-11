@@ -24,7 +24,7 @@
 
   <div class="row">
     
-    {% for book in books_list %}
+    {% for book in page_obj %}
     <div class="">
       <div class="card-panel">
             <h5><strong>{{ book.title }}</strong> <i>by</i> <span>{{book.authors}}</span> </h5>
@@ -41,6 +41,23 @@
       </a>
     </div>
     {% endfor %}
+    <div class="pagination">
+      <span class="step-links">
+          {% if page_obj.has_previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+          {% endif %}
+  
+          <span class="current">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+  
+          {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">next</a>
+              <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+      </span>
+  </div>
   </div>
 
   {% if books_list %}
@@ -48,7 +65,6 @@
     <span class="bold">Add Book</span>
   </a>
   {% endif %}
-
 
 </div>
 

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator
 from books.models import Book, Rent
 from customers.models import Customer
 from ui.utils import get_current_host, post_payload, get_request
@@ -10,7 +11,12 @@ import json
 
 def index_view(request):
     books_list = Book.objects.all().filter(stock__gt=0).order_by('-id')
-    return render(request, 'ui/book-list.html', {'books_list': books_list})
+
+    paginator = Paginator(books_list, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'ui/book-list.html', {'books_list': books_list, 'page_obj': page_obj})
 
 
 def customer_list_view(request):
