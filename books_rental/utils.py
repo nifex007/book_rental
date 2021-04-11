@@ -44,3 +44,8 @@ def get_days(start_date):
     today = datetime.date.today()
     days = abs(today - start_date).days + 1
     return days
+
+def days_between(d1, d2):
+    d1 = datetime.datetime.strptime(d1, "%Y-%m-%d")
+    d2 = datetime.datetime.strptime(d2, "%Y-%m-%d")
+    return abs((d2 - d1).days) + 1

@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
 from books.models import Book, Rent
 from customers.models import Customer
+from books_rental.utils import days_between
 from ui.utils import get_current_host, post_payload, get_request
 import json
 
@@ -116,8 +117,41 @@ def customer_charge_view(request):
         if response.status_code == 200:
             reciept = json.loads(response.text)
             reciept_data = reciept.get('data', {})
-            context['rent_charge'] = reciept_data.get('rent_charge', 0.00)
+
+            customer_reciept_details = []
+
+            if bool(reciept_data):
+                customer_rents = reciept_data.get('rents', {})
+
+                
+
+                if bool(customer_rents):
+                    for customer_rent in customer_rents:
+                        temp = {}
+                        r = Rent.objects.get(id=customer_rent['id'])
+                        temp['book_title'] = r.book.title
+                        temp['price'] = customer_rent['charge']
+                        temp['days'] = days_between(customer_rent['start_date'], customer_rent['return_date'])
+
+                        customer_reciept_details.append(temp)
+                        
+                else:
+                    temp = {
+                    "id": None,
+                    "start_date": "",
+                    "return_date": "",
+                    "charge": "0.00",
+                    "customer": None,
+                    "book": None
+                    }
+                    customer_reciept_details = [temp]
+
+            total_rent_charge = reciept_data.get('rent_charge', 0.00)
+        
+            context['total_rent_charge'] = total_rent_charge
             context['customer_full_name'] = customer_full_name
+            context['customer_reciept_details'] = customer_reciept_details
+
             return render(request, 'ui/rent-reciept.html', context)
     else:
         # queries for customer rents that have retured books and yet to be issued reciept
