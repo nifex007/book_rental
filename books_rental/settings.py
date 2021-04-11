@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+import django_heroku
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,16 +86,28 @@ WSGI_APPLICATION = 'books_rental.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DATABASE'),
-        'USER': os.environ.get('USER'),
-        'PASSWORD': os.environ.get('PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '5432',
+# dev environments 
+if os.path.isfile(os.path.join(BASE_DIR, 'books_rental/.env')):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('DATABASE'),
+            'USER': os.environ.get('USER'),
+            'PASSWORD': os.environ.get('PASSWORD'),
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            os.environ['DATABASE_URL'],
+            engine='django_tenants.postgresql_backend',
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+
 
 
 # Password validation
@@ -135,6 +150,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -153,3 +169,7 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=foo,bar', '--cover-package=books,customers,ui,books_rental'
 ]
+
+if not os.path.isfile(os.path.join(BASE_DIR, 'books_rental/.env')):
+    heroku_db_config = locals()
+    django_heroku.settings(heroku_db_config, databases=False)
