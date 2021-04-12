@@ -36,7 +36,7 @@
     {% empty %}
     <div class="nobook-wrapper center">
       <h3 class="grey-text">Sorry, you don't have any books, yet.</h3>
-      <a href="" class="btn-large grey">
+      <a href="{% url 'add_book_view' %}" class="btn-large grey">
         <span class="bold">Add Book</span>
       </a>
     </div>
