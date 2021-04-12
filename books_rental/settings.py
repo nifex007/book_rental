@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 's!kyum=n=lftbc)2__b@qr5a1%5o)u5xu5d62_ji0yafz6ql25'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
 
 ALLOWED_HOSTS = []
 
@@ -87,7 +87,8 @@ WSGI_APPLICATION = 'books_rental.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 # dev environments 
-if os.path.isfile(os.path.join(BASE_DIR, 'books_rental/.env')):
+if os.path.isfile(os.path.join(BASE_DIR, '.env')):
+    DEBUG = True
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -99,6 +100,7 @@ if os.path.isfile(os.path.join(BASE_DIR, 'books_rental/.env')):
         }
     }
 else:
+    DEBUG = False
     DATABASES = {
         'default': dj_database_url.parse(
             os.environ['DATABASE_URL'],
