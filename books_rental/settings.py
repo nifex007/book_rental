@@ -102,7 +102,7 @@ else:
     DATABASES = {
         'default': dj_database_url.parse(
             os.environ['DATABASE_URL'],
-            engine='django_tenants.postgresql_backend',
+            engine='django.db.backends.postgresql_psycopg2',
             conn_max_age=600,
             ssl_require=True
         )
